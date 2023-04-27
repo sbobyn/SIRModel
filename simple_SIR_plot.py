@@ -10,8 +10,9 @@ def SIR(y,t,beta,mew):
     dIdt = beta*S*I - mew*I
     dRdt = mew*I
     return (dSdt,dIdt,dRdt)
+
 S0,I0,R0 = 0.9,0.1,0.
-beta,mew = 0.3,0.1
+beta,mew = 0.3,0.2
 t = np.linspace(0,100,10000)
 
 soln = scipy.integrate.odeint(SIR,[S0,I0,R0],t,args=(beta,mew))
@@ -19,7 +20,7 @@ soln = np.array(soln)
 
 fig_size = 6
 fig, ax = plt.subplots(figsize=(fig_size, fig_size))
-ax.set_title(f'SIR Trajectories beta: {beta} mew: {mew}')
+ax.set_title(f'SIR Trajectories beta: {beta} mu: {mew}')
 ax.set_xlabel('Time')
 ax.set_ylabel('Population')
 ax.set_xticks([])
