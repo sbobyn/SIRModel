@@ -50,7 +50,9 @@ def setup_graph(ax):
     labels = ['Susceptible', 'Infected', 'Recovered'] 
     legend_elements = [plt.Rectangle((0,0), 1, 1, color=color) for color in colors]
     ax.legend(legend_elements, labels, loc='upper left',facecolor='white')
-    ax.set_title("SIR Plot")
+    ax.set_title("SIR Distribution")
+    ax.set_xlabel('Time')
+    ax.set_ylabel('Population')
     ax.set_xticks([])
     ax.set_yticks([])
 
@@ -59,6 +61,8 @@ setup_graph(graph_ax)
 traj_ax.set_xlim(0,num_iter-1)
 traj_ax.set_ylim(0,num_agents)
 traj_ax.set_title("SIR Trajectories")
+traj_ax.set_xlabel('Time')
+traj_ax.set_ylabel('Population')
 traj_ax.set_xticks([])
 traj_ax.set_yticks([])
 sus_line = Line2D([], [], color='blue')
