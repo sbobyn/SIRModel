@@ -17,4 +17,4 @@ Press p to toggle/pause/play the animation.
 
 # Program requirements
 
-See the .yml file to get the program dependecy information.
+See the `env.yml` file to get the program dependecy information.
