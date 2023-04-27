@@ -6,26 +6,60 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.patches import Circle
 from matplotlib.lines import Line2D
+import argparse
 
+parser = argparse.ArgumentParser(description='process simulator parameters')
+parser.add_argument('--seed', type=int, help='population size')
+parser.add_argument('--N', type=int, help='population size')
+parser.add_argument('--num_iter', type=int, help='number of time steps simulated')
+parser.add_argument('--radius', type=float, help='infection radius')
+parser.add_argument('--prob', type=float, help='infection probability')
+parser.add_argument('--duration', type=float, help='infection duration')
+args = parser.parse_args() 
+
+seed = args.seed
+N = args.N
+num_iter = args.num_iter
+radius = args.radius
+prob = args.prob
+duration = args.duration
+
+# default simulation parameters
+if not seed:
+    seed = 42
+if not N:
+    N = 200
+if not num_iter:
+    num_iter = 200
+if not radius:
+    radius = 0.5
+if not prob:
+    prob = 0.2
+if not duration :
+    duration = 30
 
 boundary = 10
-num_agents = 200
-num_iter = 200
 dt = 1/50 # 50 Hz
-infection_radius = 0.5
-infection_probability = 0.2
-infection_duration = 30
 
+print("Simulation parameters:")
+print(f"Seed: {seed}")
+print(f"Population: {N}")
+print(f"Iterations: {num_iter}")
+print(f"Infection radius: {radius}")
+print(f"Infection probability: {prob}")
+print(f"Infection duration: {duration}")
 print("Running simulation...")
+
 start_time = time.time()
 sim = SIR(
+    seed=seed,
     boundary=boundary,
-    num_agents=num_agents,
+    num_agents=N,
     num_iter=num_iter,
     dt=dt,
-    infection_radius=infection_radius,
-    infection_probability=infection_probability,
-    infection_duration=infection_duration)
+    infection_radius=radius,
+    infection_probability=prob,
+    infection_duration=duration)
 sim.run()
 end_time = time.time()
 elapsed_time = end_time - start_time
@@ -45,7 +79,7 @@ color_map = {
 
 def setup_graph(ax):
     ax.set_xlim(0,num_iter-1)
-    ax.set_ylim(0,num_agents)
+    ax.set_ylim(0,N)
     colors = ['blue', 'red', 'gray']
     labels = ['Susceptible', 'Infected', 'Recovered'] 
     legend_elements = [plt.Rectangle((0,0), 1, 1, color=color) for color in colors]
@@ -59,7 +93,7 @@ def setup_graph(ax):
 setup_graph(graph_ax)
 
 traj_ax.set_xlim(0,num_iter-1)
-traj_ax.set_ylim(0,num_agents)
+traj_ax.set_ylim(0,N)
 traj_ax.set_title("SIR Trajectories")
 traj_ax.set_xlabel('Time')
 traj_ax.set_ylabel('Population')
@@ -83,7 +117,7 @@ sim_ax.set_xticks([])
 sim_ax.set_yticks([])
 
 # Create a scatter plot with the specified point size
-circles = [Circle((x[i], y[i]), point_size, edgecolor=color_map[state_history[i][0]], facecolor=color_map[state_history[i][0]]) for i in range(num_agents)]
+circles = [Circle((x[i], y[i]), point_size, edgecolor=color_map[state_history[i][0]], facecolor=color_map[state_history[i][0]]) for i in range(N)]
 for circle in circles:
     sim_ax.add_patch(circle)
 
@@ -117,7 +151,7 @@ def animate(step):
     sim_ax.set_title(f"Susceptible: {sus_history[step]} Infected: {inf_history[step]} Recovered: {rem_history[step]}")
     x = [agent.position_history[step][0] for agent in sim.agents]
     y = [agent.position_history[step][1] for agent in sim.agents]
-    for i in range(num_agents):
+    for i in range(N):
         circles[i].center = (x[i], y[i])
         circles[i].set_edgecolor(color_map[state_history[i][step]])
         circles[i].set_facecolor(color_map[state_history[i][step]])

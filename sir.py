@@ -1,7 +1,6 @@
 from enum import Enum
 import numpy as np
 from scipy.spatial import distance
-from scipy.spatial.distance import pdist, squareform
 
 class State(Enum):
     SUS = 0 # susceptible
@@ -43,6 +42,7 @@ class Agent:
 class SIR:
     def __init__(
             self,
+            seed,
             boundary,
             num_agents,
             num_iter,
@@ -50,6 +50,7 @@ class SIR:
             infection_radius,
             infection_probability,
             infection_duration):
+        np.random.seed(seed)
         self.agents = [ Agent(boundary) for _ in range(num_agents) ]
         self.agents[0].new_state = State.INF # patient zero
         self.num_agents = num_agents
