@@ -34,7 +34,7 @@ if not num_iter:
 if not radius:
     radius = 0.5
 if not prob:
-    prob = 0.2
+    prob = 0.1
 if not duration :
     duration = 30
 
@@ -156,7 +156,7 @@ def animate(step):
         circles[i].set_edgecolor(color_map[state_history[i][step]])
         circles[i].set_facecolor(color_map[state_history[i][step]])
 
-sim_speed = 2
+sim_speed = 5
 interval = (1000*sim.dt)/sim_speed
 
 ani = animation.FuncAnimation(fig, animate, frames=sim.num_iter, interval=interval, blit=False)

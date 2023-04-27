@@ -8,10 +8,11 @@ class State(Enum):
     REM = 2 # removed
 
 class Agent:
+    max_speed = 3
     def __init__(self,boundary,state=State.SUS):
         self.boundary = boundary
         self.pos = np.random.uniform(-boundary,boundary,size=2)
-        self.vel = np.random.uniform(-1,1,size=2)
+        self.vel = np.random.uniform(-1,1,size=2)*self.max_speed
         self.state = state
         self.new_state = None
         self.position_history = []
@@ -21,8 +22,8 @@ class Agent:
 
     def update_position(self,dt):
         self.position_history.append(self.pos)
-        noise = np.random.uniform(-1,1,size=2)*0.1
-        self.vel = np.clip( self.vel+noise,-1,1 )
+        noise = np.random.uniform(-1,1,size=2)*0.01
+        self.vel = np.clip( self.vel+noise,-self.max_speed,self.max_speed )
         pos = self.pos
         # keep in bounds
         if pos[0] < -self.boundary: self.vel[0] = - self.vel[0]
