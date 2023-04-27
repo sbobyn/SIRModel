@@ -5,6 +5,7 @@ import time
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.patches import Circle
+from matplotlib.lines import Line2D
 
 
 boundary = 10
@@ -31,7 +32,7 @@ elapsed_time = end_time - start_time
 print("Total sim time\t{:.2f} seconds".format(elapsed_time))
 
 fig_size=6
-fig, (graph_ax,sim_ax) = plt.subplots(1,2,figsize=(fig_size*2, fig_size))
+fig, (graph_ax,traj_ax,sim_ax) = plt.subplots(1,3,figsize=(fig_size*3, fig_size))
 
 time_steps = list(range(num_iter))
 sus_history,inf_history,rem_history = sim.get_history()
@@ -54,6 +55,18 @@ def setup_graph(ax):
     ax.set_yticks([])
 
 setup_graph(graph_ax)
+
+traj_ax.set_xlim(0,num_iter-1)
+traj_ax.set_ylim(0,num_agents)
+traj_ax.set_title("SIR Trajectories")
+traj_ax.set_xticks([])
+traj_ax.set_yticks([])
+sus_line = Line2D([], [], color='blue')
+traj_ax.add_line(sus_line) 
+inf_line = Line2D([], [], color='red')
+traj_ax.add_line(inf_line) 
+rem_line = Line2D([], [], color='grey')
+traj_ax.add_line(rem_line) 
 
 sim_ax.set_xlim(-boundary, boundary)
 sim_ax.set_ylim(-boundary, boundary)
@@ -84,6 +97,19 @@ def animate(step):
     graph_ax.bar(step, rem_count, bottom=inf_count, color=color_map[State.REM], width=1, align='edge')
     graph_ax.bar(step, sus_count, bottom=inf_count + rem_count, color=color_map[State.SUS], width=1, align='edge')
     
+    sus_line.set_data(
+        time_steps[:step+1],
+        sus_history[:step+1]
+    )
+    inf_line.set_data(
+        time_steps[:step+1],
+        inf_history[:step+1]
+    )
+    rem_line.set_data(
+        time_steps[:step+1],
+        rem_history[:step+1]
+    )
+
     sim_ax.set_title(f"Susceptible: {sus_history[step]} Infected: {inf_history[step]} Recovered: {rem_history[step]}")
     x = [agent.position_history[step][0] for agent in sim.agents]
     y = [agent.position_history[step][1] for agent in sim.agents]
